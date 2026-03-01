@@ -1,3 +1,8 @@
+[build.environment]
+  VITE_WEBHOOK_GET_VARIATIONS = "https://bektas.app.n8n.cloud/webhook/get-variations"
+  VITE_WEBHOOK_UPDATE_STOCK = "/n8n/webhook/update-stock"
+  VITE_WEBHOOK_UPDATE_SKU = "/n8n/webhook/update-sku"
+
 [[redirects]]
   from = "/n8n/*"
   to = "https://bektas.app.n8n.cloud/:splat"
