@@ -3,9 +3,10 @@ import { useState } from 'react'
 interface SkuSearchProps {
   onSearch: (sku: string) => void
   loading: boolean
+  onBack?: () => void
 }
 
-export function SkuSearch({ onSearch, loading }: SkuSearchProps) {
+export function SkuSearch({ onSearch, loading, onBack }: SkuSearchProps) {
   const [value, setValue] = useState('')
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -26,6 +27,11 @@ export function SkuSearch({ onSearch, loading }: SkuSearchProps) {
           <span className="sku-search__dot sku-search__dot--g" />
         </div>
         <span className="sku-search__titlebar-label">PRETRAGA PROIZVODA</span>
+        {onBack && (
+          <button className="sku-search__back" type="button" onClick={onBack}>
+            ← NAZAD
+          </button>
+        )}
       </div>
       <div className="sku-search__body">
         <div className="sku-search__label">&gt;_ UNESI SKU PROIZVODA</div>

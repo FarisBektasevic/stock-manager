@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/n8n/*"
+  to = "https://bektas.app.n8n.cloud/:splat"
+  status = 200
+  force = true
