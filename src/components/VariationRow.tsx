@@ -3,18 +3,18 @@ import type { VariationRow as VariationRowType } from '../types'
 interface VariationRowProps {
   row: VariationRowType
   onChange: (sku: string, value: string) => void
+  onToggle: (sku: string, selected: boolean) => void
   disabled: boolean
 }
 
-export function VariationRow({ row, onChange, disabled }: VariationRowProps) {
+export function VariationRow({ row, onChange, onToggle, disabled }: VariationRowProps) {
   const isTracked = row.stock_quantity !== null
-  const hasChanged =
-    isTracked && row.inputValue !== '' && Number(row.inputValue) !== row.stock_quantity
+  const willUpdate = row.selected && row.inputValue !== ''
 
   let rowClass = 'variation-row'
   if (row.status === 'success') rowClass += ' variation-row--success'
   if (row.status === 'error') rowClass += ' variation-row--error'
-  if (hasChanged && row.status === 'idle') rowClass += ' variation-row--changed'
+  if (willUpdate && row.status === 'idle') rowClass += ' variation-row--changed'
 
   return (
     <div className={rowClass}>
@@ -33,12 +33,20 @@ export function VariationRow({ row, onChange, disabled }: VariationRowProps) {
           value={row.inputValue}
           onChange={(e) => onChange(row.sku, e.target.value)}
           disabled={disabled || !isTracked}
-          placeholder={isTracked ? String(row.stock_quantity) : 'N/A'}
+          placeholder="—"
         />
         <span className="variation-row__status">
           {row.status === 'success' && '✓ OK'}
           {row.status === 'error' && `✗ ${row.statusMessage ?? 'Greška'}`}
         </span>
+        <button
+          className={`variation-row__toggle ${row.selected ? 'variation-row__toggle--on' : 'variation-row__toggle--off'}`}
+          onClick={() => onToggle(row.sku, !row.selected)}
+          disabled={disabled || !isTracked}
+          title={row.selected ? 'Ukloni iz liste za ažuriranje' : 'Dodaj u listu za ažuriranje'}
+        >
+          {row.selected ? '☑' : '☐'}
+        </button>
       </div>
     </div>
   )

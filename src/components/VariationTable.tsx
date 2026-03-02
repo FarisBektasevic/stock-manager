@@ -5,6 +5,7 @@ interface VariationTableProps {
   productName: string
   rows: VariationRowType[]
   onRowChange: (sku: string, value: string) => void
+  onRowToggle: (sku: string, selected: boolean) => void
   onUpdate: () => void
   updating: boolean
 }
@@ -13,12 +14,11 @@ export function VariationTable({
   productName,
   rows,
   onRowChange,
+  onRowToggle,
   onUpdate,
   updating,
 }: VariationTableProps) {
-  const changedCount = rows.filter(
-    (r) => r.inputValue !== '' && Number(r.inputValue) !== r.stock_quantity
-  ).length
+  const selectedCount = rows.filter((r) => r.selected && r.inputValue !== '').length
 
   return (
     <div className="variation-table">
@@ -48,21 +48,22 @@ export function VariationTable({
             key={row.sku}
             row={row}
             onChange={onRowChange}
+            onToggle={onRowToggle}
             disabled={updating}
           />
         ))}
       </div>
 
       <div className="variation-table__footer">
-        {changedCount > 0 && (
+        {selectedCount > 0 && (
           <span className="variation-table__changed-hint">
-            {changedCount} promjena za slanje
+            {selectedCount} odabrano za ažuriranje
           </span>
         )}
         <button
           className="btn btn--update"
           onClick={onUpdate}
-          disabled={updating || changedCount === 0}
+          disabled={updating || selectedCount === 0}
         >
           {updating ? '[ AŽURIRANJE... ]' : `[ AŽURIRAJ STANJE ]`}
         </button>

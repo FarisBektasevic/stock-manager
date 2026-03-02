@@ -68,6 +68,7 @@ export default function App() {
       const rows: VariationRow[] = data.variations.map((v) => ({
         ...v,
         inputValue: '',
+        selected: false,
         status: 'idle',
       }))
       setStockState({ phase: 'results', productName: sku, rows })
@@ -88,11 +89,23 @@ export default function App() {
     })
   }, [])
 
+  const handleRowToggle = useCallback((sku: string, selected: boolean) => {
+    setStockState((prev) => {
+      if (prev.phase !== 'results') return prev
+      return {
+        ...prev,
+        rows: prev.rows.map((r) =>
+          r.sku === sku ? { ...r, selected } : r
+        ),
+      }
+    })
+  }, [])
+
   const handleUpdate = useCallback(async () => {
     if (stockState.phase !== 'results') return
 
     const updates = stockState.rows
-      .filter((r) => r.stock_quantity !== null && r.inputValue !== '' && Number(r.inputValue) !== r.stock_quantity)
+      .filter((r) => r.selected && r.inputValue !== '')
       .map((r) => ({ sku: r.sku, quantity: Number(r.inputValue) }))
 
     if (updates.length === 0) {
@@ -287,6 +300,7 @@ export default function App() {
                 productName={stockState.productName}
                 rows={stockState.rows}
                 onRowChange={handleRowChange}
+                onRowToggle={handleRowToggle}
                 onUpdate={handleUpdate}
                 updating={updating}
               />

@@ -32,6 +32,7 @@ export type RowStatus = 'idle' | 'success' | 'error'
 
 export interface VariationRow extends Variation {
   inputValue: string
+  selected: boolean
   status: RowStatus
   statusMessage?: string
 }
